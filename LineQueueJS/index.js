@@ -7,14 +7,18 @@ const config = {
 }
 
 module.exports = async function (context, lineItem) {
-    const lineClient = new line.Client(config)
-    const eventHandler = new EventHandler(lineClient)
+    try {
+        const lineClient = new line.Client(config)
+        const eventHandler = new EventHandler(lineClient)
 
-    if (validate(lineItem)) {
-        lineItem.events.map(function (event) {
-            eventHandler.handleEvent(context, event)
-        })
-    } else {
-        context.log.warn(validate.errors)
+        if (validate(lineItem)) {
+            lineItem.events.map(function (event) {
+                eventHandler.handleEvent(context, event)
+            })
+        } else {
+            context.log.warn(validate.errors)
+        }
+    } catch (ex) {
+        context.log.error(ex)
     }
 };
