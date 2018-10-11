@@ -10,19 +10,9 @@ describe('EventHandler', function () {
     var context = null
 
     beforeEach(() => {
-<<<<<<< HEAD
         const log = jasmine.createSpyObj('log', ['verbose', 'info', 'warn', 'error'])
         context = jasmine.createSpyObj('context', ['log'])
         context.log = log
-=======
-        const logfunc = function() {
-            console.log(arguments)
-        }
-        context = jasmine.createSpyObj('context', ['log'])
-        context.log.debug = logfunc
-        context.log.warn = logfunc
-        context.log.error = logfunc
->>>>>>> b1660ea1f75acb4ff1c438da81ac5aa0f3a439ba
 
         instance = new EventHandler(lineClient)
     })

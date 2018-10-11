@@ -3,11 +3,7 @@ const EventHandler = function (lineClient) {
 
     this.eventHandlers = {
         message: function (context, event) {
-<<<<<<< HEAD
             context.log.verbose('Sending reply message.')
-=======
-            context.log.debug('Sending reply message.')
->>>>>>> b1660ea1f75acb4ff1c438da81ac5aa0f3a439ba
 
             let message = {
                 type: 'text',
