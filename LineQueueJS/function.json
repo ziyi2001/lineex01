@@ -1,0 +1,12 @@
+{
+  "disabled": false,
+  "bindings": [
+    {
+      "name": "lineItem",
+      "type": "queueTrigger",
+      "direction": "in",
+      "queueName": "linequeue",
+      "connection": "AZURE_STORAGE_KEY"
+    }
+  ]
+}

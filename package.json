@@ -1,0 +1,28 @@
+{
+  "name": "lineex01",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "azurite": "azurite -l azurite-tmp",
+    "test": "env LINE_CHANNEL_SECRET=secret jasmine --config=jasmine.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ziyi2001/lineex01.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ziyi2001/lineex01/issues"
+  },
+  "homepage": "https://github.com/ziyi2001/lineex01#readme",
+  "dependencies": {
+    "@line/bot-sdk": "^6.3.0",
+    "ajv": "^6.5.4"
+  },
+  "devDependencies": {
+    "azurite": "^2.7.0",
+    "jasmine": "^3.2.0"
+  }
+}
