@@ -7,19 +7,17 @@ describe("EventHandler", function() {
   };
   var lineClient = new line.Client(config);
   var instance = null;
-  var context = null;
+  var logger = null;
 
   beforeEach(() => {
-    const log = jasmine.createSpyObj("log", [
+    logger = jasmine.createSpyObj("logger", [
       "verbose",
       "info",
       "warn",
       "error"
     ]);
-    context = jasmine.createSpyObj("context", ["log"]);
-    context.log = log;
 
-    instance = new EventHandler(lineClient);
+    instance = new EventHandler(logger, lineClient);
   });
 
   it("reply to a message", function() {
@@ -27,16 +25,20 @@ describe("EventHandler", function() {
       new Promise(function() {})
     );
 
-    const event = {
-      type: "message",
-      replyToken: "reply token",
-      message: {
-        type: "text",
-        text: "foobar"
-      }
+    const lineitem = {
+      events: [
+        {
+          type: "message",
+          replyToken: "reply token",
+          message: {
+            type: "text",
+            text: "foobar"
+          }
+        }
+      ]
     };
 
-    instance.handleEvent(context, event);
+    instance.handleItem(lineitem);
 
     expect(lineClient.replyMessage).toHaveBeenCalledWith(
       "reply token",
@@ -48,10 +50,32 @@ describe("EventHandler", function() {
   });
 
   it("does not nothing", function() {
-    const event = {
-      type: "join"
+    spyOn(lineClient, "replyMessage").and.returnValue(
+      new Promise(function() {})
+    );
+
+    const lineitem = {
+      events: [
+        {
+          type: "join",
+          replyToken: "token",
+          message: {
+            type: "text",
+            text: "foobar"
+          }
+        }
+      ]
     };
 
-    instance.handleEvent(context, event);
+    instance.handleItem(lineitem);
+
+    expect(logger.warn).toHaveBeenCalled();
+    expect(lineClient.replyMessage).toHaveBeenCalledTimes(0);
+  });
+
+  it("ignores invalid item", function() {
+    instance.handleItem({});
+
+    expect(logger.error).toHaveBeenCalled();
   });
 });

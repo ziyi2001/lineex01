@@ -1,27 +1,37 @@
-const EventHandler = function(lineClient) {
-  this.lineClient = lineClient;
+const validate = require("./LineMessageValidator");
+
+const EventHandler = function(logger, lineClient) {
+  this.logger = logger;
 
   this.eventHandlers = {
-    message: function(context, event) {
-      context.log.verbose("Sending reply message.");
+    message: function(event) {
+      logger.verbose("Sending reply message.");
 
       let message = {
         type: "text",
-        message: "僕とんとん\n" + event.message.text
+        text: "僕とんとん\n" + event.message.text
       };
 
       lineClient.replyMessage(event.replyToken, message).catch(function(err) {
-        context.log.error(err);
+        logger.error(err);
       });
+    }
+  };
+
+  this.handle = event => {
+    if (this.eventHandlers[event.type]) {
+      this.eventHandlers[event.type](event);
+    } else {
+      logger.warn("Not implemented type %s", event.type);
     }
   };
 };
 
-EventHandler.prototype.handleEvent = function(context, event) {
-  if (this.eventHandlers[event.type]) {
-    this.eventHandlers[event.type](context, event);
+EventHandler.prototype.handleItem = function(lineItem) {
+  if (validate(lineItem)) {
+    lineItem.events.map(this.handle);
   } else {
-    context.log.warn("Not implemented type %s", event.type);
+    this.logger.error(validate.errors);
   }
 };
 
